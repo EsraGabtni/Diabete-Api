@@ -3,10 +3,13 @@ from pydantic import BaseModel
 import joblib
 import numpy as np
 
+# Importation indispensable pour que le modèle puisse retrouver le Winsorizer lors du chargement
+from feature_engine.outliers import Winsorizer
+
 # Initialisation de l'application FastAPI
 app = FastAPI(title="API Prédiction Diabète", version="1.0")
 
-# Chargement du pipeline complet (qui intègre le scaler et le modèle)
+# Chargement du pipeline complet (qui intègre le scaler, le Winsorizer et le modèle)
 pipeline = joblib.load('diabetes_model.pkl')
 
 # Définition de la structure des données d'entrée (vos 15 features)
@@ -31,7 +34,7 @@ def predict(data: PatientData):
         data.blood_pressure
     ]])
 
-    # Le pipeline applique automatiquement le scaling puis la prédiction du modèle !
+    # Le pipeline applique automatiquement le traitement puis la prédiction du modèle !
     proba = pipeline.predict_proba(input_features)[0][1]
     prediction = int(proba >= 0.401)  # Votre seuil optimisé
 

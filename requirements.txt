@@ -6,3 +6,4 @@ joblib
 numpy
 pydantic
 requests
+feature-engine
