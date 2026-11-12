@@ -1,0 +1,26 @@
+{
+  "modele": "XGBoost_haute_precision",
+  "seuil": 0.40057095885276794,
+  "cible_precision": 0.7,
+  "precision_test": 0.7,
+  "recall_test": 0.5446,
+  "f1_test": 0.6126,
+  "roc_auc_test": 0.7896,
+  "variables": [
+    "cardiovascular_disease",
+    "bmi",
+    "systolic_bp",
+    "hypertension_status",
+    "coronary_artery_disease",
+    "waist_circumference_cm",
+    "obesity_diagnosis",
+    "hypertension",
+    "hip_circumference_cm",
+    "family_history_diabetes",
+    "body_fat_percentage",
+    "age",
+    "diastolic_bp",
+    "diet_quality_score",
+    "kidney_disease"
+  ]
+}

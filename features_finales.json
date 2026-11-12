@@ -1,0 +1,17 @@
+[
+  "cardiovascular_disease",
+  "bmi",
+  "systolic_bp",
+  "hypertension_status",
+  "coronary_artery_disease",
+  "waist_circumference_cm",
+  "obesity_diagnosis",
+  "hypertension",
+  "hip_circumference_cm",
+  "family_history_diabetes",
+  "body_fat_percentage",
+  "age",
+  "diastolic_bp",
+  "diet_quality_score",
+  "kidney_disease"
+]
