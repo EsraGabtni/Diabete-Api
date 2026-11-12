@@ -1,17 +1,29 @@
-from fastapi import FastAPI, HTTPException
-from pydantic import BaseModel, Field
-import joblib
+import sys
+import __main__
 import json
+import joblib
 import pandas as pd
+from fastapi import FastAPI, HTTPException
+from fastapi.responses import FileResponse
+from fastapi.staticfiles import StaticFiles
+from pydantic import BaseModel, Field
+from feature_engine.outliers import Winsorizer
 
-app = FastAPI(title="API Backend Prédiction Diabète")
+# 1. Injection indispensable pour que pickle/joblib retrouve le Winsorizer du notebook
+setattr(__main__, 'Winsorizer', Winsorizer)
 
-# Chargement du modèle et des features
+# Initialisation de l'application FastAPI pour MediLens
+app = FastAPI(title="MediLens - API Prédiction Diabète", version="2.0")
+
+# 2. Monter le dossier static pour charger le design (CSS, JS, images) de MediLens
+app.mount("/static", StaticFiles(directory="static"), name="static")
+
+# 3. Chargement du modèle de haute précision de ta collègue et des features
 try:
     model = joblib.load("modele_haute_precision.joblib")
     with open("features_finales.json", "r", encoding="utf-8") as f:
         features_finales = json.load(f)
-    SEUIL = 0.40  # Seuil de décision
+    SEUIL = 0.40  # Seuil de décision optimisé
     print(f"✅ Modèle chargé avec succès. {len(features_finales)} features attendues.")
 except Exception as e:
     print(f"⚠️ Erreur lors du chargement : {e}")
@@ -19,7 +31,7 @@ except Exception as e:
     features_finales = []
     SEUIL = 0.40
 
-# Schéma Pydantic strict pour valider les données envoyées par le front de tes amis
+# Schéma Pydantic strict pour valider les données de santé
 class PatientData(BaseModel):
     age: float = Field(..., ge=1, le=120)
     bmi: float = Field(..., ge=10.0, le=70.0)
@@ -31,7 +43,8 @@ class PatientData(BaseModel):
 
 @app.get("/")
 def read_root():
-    return {"static/index.html"}
+    # 4. Affiche directement ton interface MediLens sur la racine de ton lien Render
+    return FileResponse("static/index.html")
 
 @app.post("/predict")
 def predict(data: PatientData):
@@ -54,7 +67,7 @@ def predict(data: PatientData):
 
         input_df = pd.DataFrame([full_input])[features_finales]
 
-        # Prédiction de la probabilité
+        # Prédiction de la probabilité avec le modèle haute précision
         proba = float(model.predict_proba(input_df)[0, 1])
         prediction = int(proba >= SEUIL)
 
