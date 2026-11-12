@@ -31,7 +31,7 @@ class PatientData(BaseModel):
 
 @app.get("/")
 def read_root():
-    return {"message": "API Backend Diabète active et prête pour intégration 🚀"}
+    return {"static/index.html"}
 
 @app.post("/predict")
 def predict(data: PatientData):

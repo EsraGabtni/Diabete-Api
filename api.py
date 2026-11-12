@@ -26,7 +26,7 @@ class PatientData(BaseModel):
 
 @app.get("/")
 def home():
-    return {"status": "API de prédiction du diabète opérationnelle 🚀"}
+    return {"static/index.html"}
 
 @app.post("/predict")
 def predict(data: PatientData):
